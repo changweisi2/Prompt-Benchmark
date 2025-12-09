@@ -1,0 +1,16 @@
+{
+    "PhysicsObjectiveQuestions": [
+        {
+            "year": "2025",
+            "category": " ",
+            "question": "1. 新能源汽车在辅助驾驶系统测试时，感应到前方有障碍物立刻制动，做匀减速直线运动。2s内速度由12m/s减至0。该过程中加速度大小为（　　）\nA. 2m/s²\nB. 4m/s²\nC. 6m/s²\nD. 8m/s²",
+            "answer": ["C"],
+            "analysis": "【详解】根据匀变速直线运动的速度公式：\n\n$$\nv = v_0 + at\n$$\n\n其中：\n- $v_0 = 12\\,\\mathrm{m/s}$（初速度）\n- $v = 0\\,\\mathrm{m/s}$（末速度）\n- $t = 2\\,\\mathrm{s}$（时间）\n\n代入得：\n\n$$\n0 = 12 + a \\times 2\n$$\n\n解得：\n\n$$\na = -6\\,\\mathrm{m/s^2}\n$$\n\n负号表示加速度方向与运动方向相反，题目问的是加速度的大小，因此取绝对值，即 $6\\,\\mathrm{m/s^2}$。\n\n故选 C。",
+            "index": 1,
+            "score": 4
+        },
+        {
+
+        }
+    ]
+}
