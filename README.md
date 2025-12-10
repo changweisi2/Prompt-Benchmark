@@ -1,3 +1,3 @@
 # GAOKAO
 
-A　repository for the problems of the Gaokao of 2010-2025.
+A　repository for the problems of Gaokao of 2010-2025.
