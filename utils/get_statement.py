@@ -8,7 +8,7 @@ filename = "/2010-2025_Physics_MCQs.json"
 # filename = "/2010-2025_History_MCQs.json"  
 # filename = "/2010-2025_Geography_MCQs.json"  
 
-source_file_prename="ObjectiveProblems"
+source_file_prename= "../ObjectiveProblems"
 target_file_prename="ObjectiveProblemStatements"
 source_file=source_file_prename+filename
 target_file=target_file_prename+filename

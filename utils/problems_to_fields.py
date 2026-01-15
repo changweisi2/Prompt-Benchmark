@@ -137,7 +137,7 @@ classification_filename = {
 # source_file = "ObjectiveProblems/2010-2025_Biology_MCQs.json"  
 # source_file = "ObjectiveProblems/2010-2025_Political_Science_MCQs.json"  
 # source_file = "ObjectiveProblems/2010-2025_History_MCQs.json"  
-source_file = "ObjectiveProblems/2010-2025_Geography_MCQs.json"  
+source_file = "../ObjectiveProblems/2010-2025_Geography_MCQs.json"
 # -------------------------------
 # 1. 读取源 JSON（含 questions 数组）
 # -------------------------------

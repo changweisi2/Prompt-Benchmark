@@ -1,6 +1,6 @@
 import json
 
-filename = "ObjectiveProblems/2010-2025_Chemistry_MCQs.json"    # 源文件
+filename = "../ObjectiveProblems/2010-2025_Chemistry_MCQs.json"  # 源文件
 
 # 1. 读取文件
 with open(filename, "r", encoding="utf-8") as f:
