@@ -12,3 +12,7 @@ political*.json
 # api_key
 
 api_key.py
+
+# results
+
+results/

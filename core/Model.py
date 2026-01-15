@@ -22,30 +22,21 @@ class Model:
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
 
-    def execute(self, prompt, question, pictures):
+    def execute(self, prompt, question):
 
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.api_key}'
         }
 
-        user_content = question
-        picture_urls = [
-            "以下是图片路径"
-        ]
-        for pict in pictures:
-            picture_urls.append(
-                f"image_url:data:image/png;base64,{self.encode_image(pict)}"
-            )
 
-        user_content += "\n".join(picture_urls)
 
         while True:
             try:
                 data = {
                     "model": f"{self.model_name}",  # model参数
                     "temperature": self.temperature,
-                    "max_tokens": self.max_tokens,
+                    # "max_tokens": self.max_tokens,
                     "messages": [
                         {
                             "role": "system",
@@ -58,7 +49,7 @@ class Model:
                     ]
                 }
 
-                response = requests.post(self.url, headers=headers, data=json.dumps(data), verify=False)
+                response = requests.post(self.url, headers=headers, data=json.dumps(data), verify=True)
 
                 break
             except openai.BadRequestError as e:
