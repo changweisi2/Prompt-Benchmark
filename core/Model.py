@@ -11,10 +11,9 @@ from typing import List
 
 
 class Model:
-    def __init__(self, api_key, base_url, model_name, temperature, max_tokens):
+    def __init__(self, api_key, base_url, model_name, temperature):
         self.model_name = model_name
         self.temperature = temperature
-        self.max_tokens = max_tokens
         self.api_key = api_key
         self.url = base_url
 

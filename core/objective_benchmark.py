@@ -15,7 +15,7 @@ def main():
     model_name = "DeepSeek-R1"
 
 
-    MODEL = Model(api_key, base_url, model_name, temperature=0.3, max_tokens=4096)
+    MODEL = Model(api_key, base_url, model_name, temperature=0.3)
 
     for field_index, field in enumerate(FIELDS):
         for strategy in STRATEGIES :
