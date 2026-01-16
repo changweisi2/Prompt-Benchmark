@@ -132,21 +132,21 @@ def to_tackle_questions(data,start_index,end_index,model:Model,prompt):
     return model_answer_dictlist
 
 
-def write_results_to_file(zone,prompt,model:Model, model_answer_dictlist):
+def write_results_to_file(field,strategy,model:Model, model_answer_dictlist):
 
 
 
     model_name=model.model_name
 
-    save_directory = "results/"+zone+"/"+prompt+"/"+model_name
+    save_directory = "results/"+model_name+"/"+field+"/"+strategy
 
-    file_name = "objective.json"
+    file_name = ".json"
     result_file_path = os.path.join(save_directory, file_name)
     with codecs.open(result_file_path, 'w', 'utf-8') as f:
         output = {
-            'zone' : zone,
-            'prompt' : prompt,
-            'model' : model_name,
+            'field' : field,
+            'strategy' : strategy,
+            'model_name' : model_name,
             'questions' : model_answer_dictlist
             }
         json.dump(output, f, ensure_ascii=False, indent=4)
