@@ -15,8 +15,7 @@ def extract_choices(answer_part):
     found = re.findall("[A-Z]", answer_part)
     result = []
     for c in found:
-        if c not in result:
-            result.append(c)
+        result.append(c)
     return result
 
 
@@ -139,6 +138,8 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
 
             model_output = response_data["choices"][0]["message"]["content"]
             model_answer = extract_objective_answer(model_output, question_type='single_question_choice')
+            print(model_output)
+            print(model_answer)
 
             # 数据字典
             model_answer_dict = {
