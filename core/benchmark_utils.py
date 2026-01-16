@@ -164,7 +164,7 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
             continue
 
         # 延迟请求
-        time.sleep(3)
+        time.sleep(2)
 
     return model_answer_dictlist
 
