@@ -22,7 +22,7 @@ class Model:
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
 
-    def execute(self, prompt, question):
+    def execute(self, full_prompt):
 
         headers = {
             'Content-Type': 'application/json',
@@ -39,12 +39,8 @@ class Model:
                     # "max_tokens": self.max_tokens,
                     "messages": [
                         {
-                            "role": "system",
-                            "content": prompt
-                        },
-                        {
                             "role": "user",
-                            "content": question
+                            "content": full_prompt
                         }
                     ]
                 }
