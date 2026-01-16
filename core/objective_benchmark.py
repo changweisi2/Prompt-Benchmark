@@ -42,6 +42,32 @@ def main():
                                 field=field,
                                 strategy=strategy)
 
+    # field_index = 6
+    # field = FIELDS[6]
+    # for strategy in STRATEGIES :
+    #     current_root = os.path.dirname(os.path.abspath(__file__))
+    #     prompt_file_path = os.path.join(current_root,"Obj_Prompt.json")
+    #     with open(prompt_file_path,'r',encoding="utf-8") as f :
+    #         prompts = json.load(f)
+    #
+    #     general_prompt = prompts["examples"][field_index]["prefix_prompt"]
+    #
+    #     project_root = os.path.dirname(current_root)
+    #     source_file_path = os.path.join(project_root, "Objective",field + ".json")
+    #
+    #     data = load_questions_from_file(source_file_path)
+    #     num = len(data)
+    #
+    #
+    #
+    #     to_tackle_questions(data,
+    #                         0,
+    #                         num,
+    #                         MODEL,
+    #                         general_prompt,
+    #                         field=field,
+    #                         strategy=strategy)
+
 
 if __name__ == "__main__" :
     main()
