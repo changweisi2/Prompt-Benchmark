@@ -41,7 +41,7 @@ def extract_objective_answer(model_output, question_type, answer_length=None):
         else :
             answer_part = None
     except Exception as e:
-        print("解析失败:"+e)
+        print(f"解析失败:{e}")
 
 
     # ===== 选择题 =====
@@ -49,8 +49,8 @@ def extract_objective_answer(model_output, question_type, answer_length=None):
         choices = extract_choices(answer_part)
         if not choices:
             choices = extract_choices(content[-20:], 'A-Z')
-        if choices:
-            model_answer.append(''.join(choices))
+
+        model_answer = choices
 
     # ===== 组合选择题（多个单选）=====
     elif question_type == 'multi_question_choice':
