@@ -14,59 +14,54 @@ def main():
     base_url = "https://api.modelarts-maas.com/v2/chat/completions"
     model_name = "DeepSeek-R1"
 
-
     MODEL = Model(api_key, base_url, model_name, temperature=0.3)
 
+    current_root = os.path.dirname(os.path.abspath(__file__))
+    prompt_file_path = os.path.join(current_root, "Obj_Prompt.json")
+    
+    try:
+        with open(prompt_file_path, 'r', encoding="utf-8") as f:
+            prompts = json.load(f)
+    except Exception as e:
+        print(f"Error: 无法加载提示词文件 {prompt_file_path}: {e}")
+        return
+
+    total_fields = len(FIELDS)
     for field_index, field in enumerate(FIELDS):
-        for strategy in STRATEGIES :
-            current_root = os.path.dirname(os.path.abspath(__file__))
-            prompt_file_path = os.path.join(current_root,"Obj_Prompt.json")
-            with open(prompt_file_path,'r',encoding="utf-8") as f :
-                prompts = json.load(f)
+        print(f"\n{'='*50}")
+        print(f"正在处理领域 [{field_index + 1}/{total_fields}]: {field}")
+        print(f"{'='*50}")
 
-            general_prompt = prompts["examples"][field_index]["prefix_prompt"]
+        for strategy_index, strategy in enumerate(STRATEGIES):
+            strategy_name = strategy.get('name', 'Unknown')
+            print(f"\n>>> 策略 [{strategy_index + 1}/{len(STRATEGIES)}]: {strategy_name}")
+            
+            try:
+                general_prompt = prompts["examples"][field_index]["prefix_prompt"]
+                project_root = os.path.dirname(current_root)
+                source_file_path = os.path.join(project_root, "Objective", field + ".json")
 
-            project_root = os.path.dirname(current_root)
-            source_file_path = os.path.join(project_root, "Objective",field + ".json")
+                if not os.path.exists(source_file_path):
+                    print(f"跳过: 找不到题目文件 {source_file_path}")
+                    continue
 
-            data = load_questions_from_file(source_file_path)
-            num = len(data)
+                data = load_questions_from_file(source_file_path)
+                num = len(data)
 
-
-
-            to_tackle_questions(data,
-                                0,
-                                num,
-                                MODEL,
-                                general_prompt,
-                                field=field,
-                                strategy=strategy)
-
-    # field_index = 6
-    # field = FIELDS[6]
-    # for strategy in STRATEGIES :
-    #     current_root = os.path.dirname(os.path.abspath(__file__))
-    #     prompt_file_path = os.path.join(current_root,"Obj_Prompt.json")
-    #     with open(prompt_file_path,'r',encoding="utf-8") as f :
-    #         prompts = json.load(f)
-    #
-    #     general_prompt = prompts["examples"][field_index]["prefix_prompt"]
-    #
-    #     project_root = os.path.dirname(current_root)
-    #     source_file_path = os.path.join(project_root, "Objective",field + ".json")
-    #
-    #     data = load_questions_from_file(source_file_path)
-    #     num = len(data)
-    #
-    #
-    #
-    #     to_tackle_questions(data,
-    #                         0,
-    #                         num,
-    #                         MODEL,
-    #                         general_prompt,
-    #                         field=field,
-    #                         strategy=strategy)
+                to_tackle_questions(
+                    data,
+                    0,
+                    num,
+                    MODEL,
+                    general_prompt,
+                    field=field,
+                    strategy=strategy
+                )
+            except IndexError:
+                print(f"警告: 领域索引 {field_index} 在 Obj_Prompt.json 中无对应配置")
+            except Exception as e:
+                print(f"执行异常 (领域:{field}, 策略:{strategy_name}): {e}")
+                continue
 
 
 if __name__ == "__main__" :

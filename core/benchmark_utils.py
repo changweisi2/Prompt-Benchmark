@@ -126,6 +126,7 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
 
         # 请求大模型响应
         try:
+            # 主要时间占用
             response = model.execute(full_prompt)
             response_data = response.json()
             
@@ -138,8 +139,7 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
 
             model_output = response_data["choices"][0]["message"]["content"]
             model_answer = extract_objective_answer(model_output, question_type='single_question_choice')
-            print(model_output)
-            print(model_answer)
+
 
             # 数据字典
             model_answer_dict = {
