@@ -5,7 +5,7 @@ import requests
 import base64
 
 import time
-import openai
+
 from random import choice
 from typing import List
 
@@ -46,10 +46,7 @@ class Model:
                 response = requests.post(self.url, headers=headers, data=json.dumps(data), verify=True)
 
                 break
-            except openai.BadRequestError as e:
-                print('BadRequestError:', e)
-                response = "Your input image may contain content that is not allowed by our safety system."
-                break
+
             except Exception as e:
                 print('Exception:', e)
                 time.sleep(1)

@@ -34,7 +34,8 @@ def main():
 
         for strategy_index, strategy in enumerate(STRATEGIES):
             strategy_name = strategy.get('name', 'Unknown')
-            print(f"\n>>> 策略 [{strategy_index + 1}/{len(STRATEGIES)}]: {strategy_name}")
+            strategy_description  = strategy['description']
+            print(f"\n>>> 策略 [{strategy_index + 1}/{len(STRATEGIES)}]: {strategy_name}:{strategy_description}")
             
             try:
                 general_prompt = prompts["examples"][field_index]["prefix_prompt"]

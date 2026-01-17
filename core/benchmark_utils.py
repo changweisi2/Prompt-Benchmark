@@ -149,7 +149,7 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
             # 获取当前线程编号 (简单提取线程名末尾数字)
             thread_name = threading.current_thread().name
             worker_id = thread_name.split('_')[-1] if '_' in thread_name else thread_name
-            print(f"[线程 {worker_id}] 正在处理题目 {index}...")
+            print(f"\n[线程 {worker_id}] 正在处理题目 {index}...")
 
         question = data[i]['question'].strip() + '\n'
         year = data[i]['year']
@@ -186,7 +186,8 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
                 'model_output': model_output
             }
         except Exception as e:
-            print(f"处理题目 {index} 时发生错误: {e}")
+            print(f"\n处理题目 {index} 时发生错误: {e}")
+            print(model_output)
             return None
 
     # 执行并发测试
@@ -198,7 +199,6 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
         futures = [executor.submit(process_item, i) for i in range(start_index, end_index)]
         
         for future in tqdm(as_completed(futures), total=len(futures)):
-            print()
             result = future.result()
             if result:
                 results_batch.append(result)
