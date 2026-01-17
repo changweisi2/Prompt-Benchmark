@@ -42,6 +42,7 @@ def extract_objective_answer(model_output, question_type, answer_length=None):
             answer_part = None
     except Exception as e:
         print(f"解析失败:{e}")
+        print(model_output)
 
 
     # ===== 选择题 =====

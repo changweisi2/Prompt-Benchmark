@@ -35,7 +35,6 @@ class Model:
                 data = {
                     "model": f"{self.model_name}",  # model参数
                     "temperature": self.temperature,
-                    # "max_tokens": self.max_tokens,
                     "messages": [
                         {
                             "role": "user",
