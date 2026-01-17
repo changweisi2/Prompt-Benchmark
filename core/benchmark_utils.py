@@ -2,10 +2,31 @@ import codecs
 import os
 import re
 import json
-from tqdm import  tqdm
+from tqdm import tqdm
 import time
+import threading
+import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 from core.Model import Model
+
+# 文件写入锁
+file_write_lock = threading.Lock()
+
+@retry(
+    wait=wait_exponential(multiplier=1, min=1, max=10),  # 指数退避 1s, 2s, 4s...
+    stop=stop_after_attempt(5),
+    retry=retry_if_exception_type((requests.exceptions.HTTPError, requests.exceptions.Timeout))
+)
+def rate_limited_request(model, prompt):
+    """带重试和退避的API请求"""
+    response = model.execute(prompt)
+    if response.status_code == 429:  # Too Many Requests
+        raise requests.exceptions.HTTPError("Rate limit exceeded")
+    if hasattr(response, 'raise_for_status'):
+        response.raise_for_status()  # 抛出其他HTTP错误
+    return response
 
 
 def extract_choices(answer_part):
@@ -82,9 +103,9 @@ def load_questions_from_file(source_file_path:str):
     return data
 
 
-def to_tackle_questions(data, start_index, end_index, model: Model, general_prompt, field=None, strategy=None):
+def to_tackle_questions(data, start_index, end_index, model: Model, general_prompt, field=None, strategy=None, max_workers=3):
     """
-    进行题目解答测试，支持断点续传
+    进行题目解答测试，支持断点续传与并发处理
     """
     model_answer_dictlist = []
     
@@ -106,44 +127,54 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
 
     completed_indices = {item['index'] for item in model_answer_dictlist}
 
-    # 执行测试
-    for i in tqdm(range(start_index, end_index)):
+    # 添加速率控制变量
+    request_lock = threading.Lock()
+    last_request_time = {'time': time.time()}
+    request_counter = {'count': 0}
+
+    def process_item(i):
         index = data[i]['index']
-        
-        # 跳过已完成的题目
         if index in completed_indices:
-            continue
+            return None
+
+        # 请求前等待（保证至少1.5秒间隔）
+        with request_lock:
+            current_time = time.time()
+            elapsed = current_time - last_request_time['time']
+            if elapsed < 1.5:
+                time.sleep(1.5 - elapsed)
+            last_request_time['time'] = time.time()
+            request_counter['count'] += 1
+            
+            # 获取当前线程编号 (简单提取线程名末尾数字)
+            thread_name = threading.current_thread().name
+            worker_id = thread_name.split('_')[-1] if '_' in thread_name else thread_name
+            print(f"[线程 {worker_id}] 正在处理题目 {index}...")
 
         question = data[i]['question'].strip() + '\n'
         year = data[i]['year']
         category = data[i]['category']
         score = data[i]['score']
         standard_answer = data[i]['answer']
-        answer_length = len(standard_answer)
         analysis = data[i]['analysis']
         strategy_description = strategy["description"]
 
         full_prompt = f"{general_prompt}\n\n【解题策略】\n{strategy_description}\n\n【题目】\n{question}"
 
-        # 请求大模型响应
         try:
-            # 主要时间占用
-            response = model.execute(full_prompt)
+            # 使用带重试机制的请求
+            response = rate_limited_request(model, full_prompt)
+            
             response_data = response.json()
-            
-            print()
-            print(f"Index: {index}, Status: {response.status_code}")
-            
-            if response.status_code != 200:
-                print(f"请求失败: {response.text}")
-                continue
-
             model_output = response_data["choices"][0]["message"]["content"]
             model_answer = extract_objective_answer(model_output, question_type='single_question_choice')
 
+            if request_counter['count'] % 50 == 0:
+                print(f"已发送 {request_counter['count']} 个请求，建议检查配额使用情况")
 
-            # 数据字典
-            model_answer_dict = {
+            print(f"[线程 {worker_id}] 题目 {index} 处理完成。")
+
+            return {
                 'index': index,
                 'year': year,
                 'category': category,
@@ -154,18 +185,35 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
                 'model_answer': model_answer,
                 'model_output': model_output
             }
-            model_answer_dictlist.append(model_answer_dict)
-            
-            # 边测试边存储
-            if field and strategy:
-                write_results_to_file(field, strategy, model, model_answer_dictlist,result_file_path)
-                
         except Exception as e:
             print(f"处理题目 {index} 时发生错误: {e}")
-            continue
+            return None
 
-        # 延迟请求
-        time.sleep(2)
+    # 执行并发测试
+    max_workers = min(max_workers, 3)
+    results_batch = []
+    BATCH_SIZE = 5
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [executor.submit(process_item, i) for i in range(start_index, end_index)]
+        
+        for future in tqdm(as_completed(futures), total=len(futures)):
+            print()
+            result = future.result()
+            if result:
+                results_batch.append(result)
+                # 批量写入，减少IO竞争
+                if len(results_batch) >= BATCH_SIZE and field and strategy:
+                    with file_write_lock:
+                        model_answer_dictlist.extend(results_batch)
+                        write_results_to_file(field, strategy, model, model_answer_dictlist, result_file_path)
+                    results_batch = []
+
+        # 写入剩余结果
+        if results_batch and field and strategy:
+            with file_write_lock:
+                model_answer_dictlist.extend(results_batch)
+                write_results_to_file(field, strategy, model, model_answer_dictlist, result_file_path)
 
     return model_answer_dictlist
 
