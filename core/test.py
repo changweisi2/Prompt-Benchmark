@@ -54,7 +54,9 @@ general_prompt = (
 strategy_description = STRATEGIES[0]["description"]
 
 
-full_prompt = f"{general_prompt}\n\n【解题策略】\n{strategy_description}\n\n【题目】\n{question}"
+# full_prompt = f"{general_prompt}\n\n【解题策略】\n{strategy_description}\n\n【题目】\n{question}"
+
+full_prompt = "你是什么模型？"
 print(full_prompt)
 
 
