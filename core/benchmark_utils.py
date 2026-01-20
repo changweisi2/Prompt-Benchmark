@@ -19,9 +19,9 @@ file_write_lock = threading.Lock()
     stop=stop_after_attempt(5),
     retry=retry_if_exception_type((requests.exceptions.HTTPError, requests.exceptions.Timeout))
 )
-def rate_limited_request(model, prompt):
+def rate_limited_request(model, prompt,pictures = None):
     """带重试和退避的API请求"""
-    response = model.execute(prompt)
+    response = model.execute(prompt,pictures)
     if response.status_code == 429:  # Too Many Requests
         raise requests.exceptions.HTTPError("Rate limit exceeded")
     if hasattr(response, 'raise_for_status'):
@@ -158,12 +158,12 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
         standard_answer = data[i]['answer']
         analysis = data[i]['analysis']
         strategy_description = strategy["description"]
-
+        pictures = data[i].get('picture', None)
         full_prompt = f"{general_prompt}\n\n【解题策略】\n{strategy_description}\n\n【题目】\n{question}"
 
         try:
             # 使用带重试机制的请求
-            response = rate_limited_request(model, full_prompt)
+            response = rate_limited_request(model, full_prompt,pictures)
             
             response_data = response.json()
             model_output = response_data["choices"][0]["message"]["content"]
