@@ -197,7 +197,11 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
         except Exception as e:
             print(f"\n处理题目 {index} 时发生错误: {e}")
             print(model_output)
-            return None
+            return {
+                'index': index,
+                'year': year,
+                'error' : "error"
+            }
 
     # 执行并发测试
     max_workers = min(max_workers, 3)

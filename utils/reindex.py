@@ -19,9 +19,7 @@ import json
 # filename = "Fields\Creative_and_Open-ended_Questions.json"  
 
 files=[
-    "Fields/Mathematical_Reasoning.json","Fields/Logical_Reasoning.json","Fields/Lang_Comp_and_Produc.json","Fields/Natural_Science.json",
-    "Fields/Sociocultural_Understanding.json","Fields/Data_and_StatisticalLiteracy.json","Fields/Commonsense_and_WorldKnowledge.json" ,
-    "Fields/Creative_and_Open-ended_Questions.json"
+        "../Data/Multimodal_Information/Multimodal_Information.json"
     ]
 
 for filename in files:
