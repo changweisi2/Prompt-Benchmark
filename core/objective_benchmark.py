@@ -47,7 +47,7 @@ def main():
             try:
                 general_prompt = prompts["examples"][field_index]["prefix_prompt"]
                 project_root = os.path.dirname(current_root)
-                source_file_path = os.path.join(project_root, "Data/Objective", field + ".json")
+                source_file_path = os.path.join(project_root, "Data\Objective", field + ".json")
 
                 if not os.path.exists(source_file_path):
                     print(f"跳过: 找不到题目文件 {source_file_path}")

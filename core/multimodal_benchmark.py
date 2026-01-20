@@ -52,7 +52,7 @@ def main():
                 general_prompt = "请解答下面的问题\n仔细阅读题目,解答其中的问题，请你严格使用如下的思考解答策略和回答格式来解答问题并将思考过程写在【解析】和<eoe>之间。你的答案请写在【答案】和<eoa>之间\n完整的题目回答格式如下：\n【解析】 ...<eoe>\n【答案】...<eoa>\n \n请你严格按照上述格式作答；如果不止一道题，请分别作答，最终所有答案排好顺序全都写在【答案】...<eoa>中，只写答案字母，如【解析】 ...<eoe>\n【答案】A A B B C<eoa>。\n策略、题目、图片如下：",
 
                 project_root = os.path.dirname(current_root)
-                source_file_path = os.path.join(project_root, "Data/Multimodal_Information", field + ".json")
+                source_file_path = os.path.join(project_root, "Data\Multimodal_Information", field + ".json")
 
                 if not os.path.exists(source_file_path):
                     print(f"跳过: 找不到题目文件 {source_file_path}")

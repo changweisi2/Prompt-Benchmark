@@ -55,12 +55,18 @@ def extract_objective_answer(model_output, question_type, answer_length=None):
         # 统一预处理
         content = re.sub(r'\s+', '', model_output)
 
-        # 正则匹配
+        # 正则匹配 - 先尝试寻找 【答案】(.*?)<eoa> 格式
         match = re.search(r'【答案】(.*?)<eoa>', content)
-        if match :
+        if match:
             answer_part = match.group(1).strip()
-        else :
-            answer_part = None
+        else:
+            # 如果没有找到 <eoa> 标记，则尝试寻找 【答案】 后面的内容
+            alt_match = re.search(r'【答案】([A-Z\s]+?)(?:\n|$|[^\w\s])', content)
+            if alt_match:
+                answer_part = alt_match.group(1).strip()
+            else:
+                answer_part = None
+
     except Exception as e:
         print(f"解析失败:{e}")
         print(model_output)
@@ -158,7 +164,10 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
         standard_answer = data[i]['answer']
         analysis = data[i]['analysis']
         strategy_description = strategy["description"]
+
+        # 图片数据
         pictures = data[i].get('picture', None)
+
         full_prompt = f"{general_prompt}\n\n【解题策略】\n{strategy_description}\n\n【题目】\n{question}"
 
         try:
