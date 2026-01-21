@@ -167,6 +167,7 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
 
         # 图片数据
         pictures = data[i].get('picture', None)
+        model_output = None
 
         full_prompt = f"{general_prompt}\n\n【解题策略】\n{strategy_description}\n\n【题目】\n{question}"
 
@@ -181,7 +182,7 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
             if request_counter['count'] % 50 == 0:
                 print(f"已发送 {request_counter['count']} 个请求，建议检查配额使用情况")
 
-            print(f"[线程 {worker_id}] 题目 {index} 处理完成。")
+            print(f"\n[线程 {worker_id}] 题目 {index} 处理完成。")
 
             return {
                 'index': index,
@@ -196,12 +197,9 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
             }
         except Exception as e:
             print(f"\n处理题目 {index} 时发生错误: {e}")
-            print(model_output)
-            return {
-                'index': index,
-                'year': year,
-                'error' : "error"
-            }
+            if model_output:
+                print(f"模型输出内容: {model_output}")
+            return None
 
     # 执行并发测试
     max_workers = min(max_workers, 3)
@@ -212,15 +210,18 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
         futures = [executor.submit(process_item, i) for i in range(start_index, end_index)]
         
         for future in tqdm(as_completed(futures), total=len(futures)):
-            result = future.result()
-            if result:
-                results_batch.append(result)
-                # 批量写入，减少IO竞争
-                if len(results_batch) >= BATCH_SIZE and field and strategy:
-                    with file_write_lock:
-                        model_answer_dictlist.extend(results_batch)
-                        write_results_to_file(field, strategy, model, model_answer_dictlist, result_file_path)
-                    results_batch = []
+            try:
+                result = future.result()
+                if result:
+                    results_batch.append(result)
+                    # 批量写入，减少IO竞争
+                    if len(results_batch) >= BATCH_SIZE and field and strategy:
+                        with file_write_lock:
+                            model_answer_dictlist.extend(results_batch)
+                            write_results_to_file(field, strategy, model, model_answer_dictlist, result_file_path)
+                        results_batch = []
+            except Exception as e:
+                print(f"\n子线程执行异常: {e}")
 
         # 写入剩余结果
         if results_batch and field and strategy:
