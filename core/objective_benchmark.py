@@ -15,8 +15,8 @@ def main():
     base_url = "https://api.modelarts-maas.com/v2/chat/completions"
 
     # 模型
-    # model_name = "DeepSeek-R1"
-    model_name = "deepseek-v3.2"
+    model_name = "DeepSeek-R1"
+    # model_name = "deepseek-v3.2"
     # model_name = "qwen3-235b-a22b"
 
     MODEL = Model(api_key, base_url, model_name, temperature=0.3)

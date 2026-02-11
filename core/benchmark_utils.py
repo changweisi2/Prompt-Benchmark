@@ -204,7 +204,9 @@ def to_tackle_questions(data, start_index, end_index, model: Model, general_prom
     # 执行并发测试
     max_workers = min(max_workers, 3)
     results_batch = []
-    BATCH_SIZE = 5
+
+    # 一次写入量
+    BATCH_SIZE = 1
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(process_item, i) for i in range(start_index, end_index)]
