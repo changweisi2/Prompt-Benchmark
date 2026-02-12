@@ -11,7 +11,7 @@ from core.Fields import FIELDS
 from core.Strategies import STRATEGIES
 
 # 设置模型列表
-MODELS = ["DeepSeek-R1", "deepseek-v3.2", "qwen3-235b-a22b"]
+MODELS = ["DeepSeek-R1", "deepseek-v3.2", "qwen3-235b-a22b","qwen2.5-vl-72b"]
 
 # 数据根目录
 RESULTS_DIR = "results"
@@ -19,7 +19,10 @@ ANALYSIS_RESULTS_DIR = "analysis_results"
 
 def calculate_scoring_rates():
     """统计每个模型在不同领域、不同策略下的得分率并绘图"""
-    
+
+    os.chdir("..")
+    print(os.getcwd())
+
     # 确保图片根目录存在
     if not os.path.exists(ANALYSIS_RESULTS_DIR):
         os.makedirs(ANALYSIS_RESULTS_DIR)

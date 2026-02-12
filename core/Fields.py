@@ -7,4 +7,5 @@ FIELDS = [
     "Mathematical_Reasoning",
     "Natural_Science",
     "Sociocultural_Understanding",
+    "Multimodal_Information"
 ]
