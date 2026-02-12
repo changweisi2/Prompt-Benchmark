@@ -4,6 +4,10 @@ A repository for the LLM Prompt Benchmark using problems of Gaokao during 2010-2
 
 > This repository is under construction.
 
+## introduction
+
+这是一个用来测试在不同领域下，不同prompt策略对大模型解题表现影响的仓库，主要使用高考真题作为测试集。
+
 ## classifications
 
 | 领域 | 定义 | 典型高考题示例 |
