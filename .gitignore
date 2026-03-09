@@ -1,6 +1,8 @@
 # env
 .idea/
 .venv/
+core/__pycache__
+__pycache__/
 
 # pictures
 Data/2010-2023_Biology_MCQs/
@@ -17,6 +19,7 @@ api_key.py
 
 # results
 results/
+subresults/
 
 # temp
 ObjectiveProblems/
