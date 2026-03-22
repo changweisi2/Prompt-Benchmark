@@ -19,7 +19,7 @@ import json
 # filename = "Fields\Creative_and_Open-ended_Questions.json"  
 
 files=[
-        "../Data/Multimodal_Information/Multimodal_Information.json"
+        "../evidence/evidence_problems.json"
     ]
 
 for filename in files:
@@ -28,7 +28,7 @@ for filename in files:
         data = json.load(f)
 
     # 2. 重排 index
-    for new_index, question in enumerate(data["questions"]):
+    for new_index, question in enumerate(data["example"]):
         print(new_index, end=' ')
         
         question["index"] = new_index
