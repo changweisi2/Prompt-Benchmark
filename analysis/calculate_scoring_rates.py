@@ -11,7 +11,7 @@ from core.Fields import FIELDS
 from core.Strategies import STRATEGIES
 
 # 设置模型列表
-MODELS = ["DeepSeek-R1", "deepseek-v3.2", "qwen3-235b-a22b","qwen2.5-vl-72b"]
+MODELS = [ "deepseek-v3.2"]
 
 # 数据根目录
 RESULTS_DIR = "results"
@@ -62,7 +62,7 @@ def calculate_scoring_rates():
                             for item in data:
                                 total_score += item.get("score", 0)
                                 total_model_score += item.get("model_score", 0)
-                        
+
                         scoring_rate = (total_model_score / total_score) if total_score > 0 else 0
                         field_results.append({
                             "strategy": strategy_name.lstrip('_'), # 去掉前导下划线用于显示
@@ -128,5 +128,6 @@ if __name__ == "__main__":
     # 设置支持中文显示
     plt.rcParams['font.sans-serif'] = ['SimHei'] # Windows 常用中文字体
     plt.rcParams['axes.unicode_minus'] = False
-    
+
     calculate_scoring_rates()
+

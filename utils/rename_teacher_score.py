@@ -18,12 +18,12 @@ def process_file(file_path):
         modified = False
         
         # 检查 'example' 是否在 data 中并且是一个列表
-        if 'example' in data and isinstance(data['example'], list):
-            for item in data['example']:
+        if 'questions' in data and isinstance(data['questions'], list):
+            for item in data['questions']:
                 if isinstance(item, dict):
-                    if 'model_score' in item:
+                    if 'teacher_score' in item:
                         # 重命名字段同时保留其值
-                        item['teacher_score'] = item.pop('model_score')
+                        item['model_score'] = item.pop('teacher_score')
                         modified = True
                     
         if modified:
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # 获取项目根目录的绝对路径
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
-    subresults_dir = os.path.join(project_root, 'subresults')
+    subresults_dir = os.path.join(project_root, 'results\\deepseek-v3.2')
     
     if os.path.exists(subresults_dir):
         print(f"开始处理目录中的文件: {subresults_dir}")
