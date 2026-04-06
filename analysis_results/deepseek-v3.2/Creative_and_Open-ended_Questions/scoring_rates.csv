@@ -1,0 +1,11 @@
+﻿strategy,scoring_rate,total_score,total_model_score
+0_CoT,0.84,50,42.0
+1_SC,0.85,50,42.5
+2_ToT,0.9,50,45.0
+3_GoT,0.84,50,42.0
+4_Auto-CoT,0.94,50,47.0
+5_GKP,0.85,50,42.5
+6_ART,0.9,50,45.0
+7_ReAct,0.85,50,42.5
+8_APE,0.88,50,44.0
+9_RAG,0.82,50,41.0
